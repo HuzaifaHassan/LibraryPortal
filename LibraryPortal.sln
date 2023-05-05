@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryPortal", "LibraryPortal\LibraryPortal.csproj", "{109E3208-1522-40CD-B6B0-935165FB9D1F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbHandler", "DbHandler\DbHandler.csproj", "{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{109E3208-1522-40CD-B6B0-935165FB9D1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{109E3208-1522-40CD-B6B0-935165FB9D1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{109E3208-1522-40CD-B6B0-935165FB9D1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{109E3208-1522-40CD-B6B0-935165FB9D1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD72F08D-58D9-4E36-A83F-62D9B199CF9E}
+	EndGlobalSection
+EndGlobal
