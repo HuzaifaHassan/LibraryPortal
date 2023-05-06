@@ -28,6 +28,12 @@ namespace DbHandler.Repositories
 
 
         }
+        public StudentDetails GetByNameandPassword(string name, string password)
+        {
+            var resp = _ctx.TStudentDet.Where(x => x.Name == name && x.Password== password).FirstOrDefault();
+            return resp;
+
+        }
         public List<StudentDetails> GetStudent()
         {
             return _ctx.TStudentDet.Where(x => x.IsActive == true).ToList();

@@ -22,7 +22,7 @@ using System.Configuration;
 
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-//using DbHandler.Repositories;
+using DbHandler.Repositories;
 using System.Reflection;
 using Microsoft.OpenApi.Models;
 //using DbHandler.Repositories;
@@ -82,11 +82,11 @@ namespace LibraryPortal
             #endregion
 
             #region CustomServices
-            //services.AddScoped<IStudentRepository, StudentRepository>();
-            //services.AddScoped<IAdminRepository, AdminRepository>();
-            //services.AddScoped<ICourseDueRepository, CourseRepository>();
-            //services.AddScoped<ILibraryDueRepository, LibraryDueRepository>();
-            //services.AddScoped<IAddStudentRepository, AddStudentRepository>();
+            services.AddScoped<IStudentRepositories, StudentRepository>();
+            services.AddScoped<IAdminRepository, AdminRepository>();
+            services.AddScoped<IStudentDuesRepository, StudentDuesRepository>();
+            services.AddScoped<ILibraryDuesRepository, LibraryDuesRepository>();
+            services.AddScoped<IAddStudentRepository,AddStudentRepository>();
             //services.AddScoped<APIHelper>();
             #endregion
             services.AddHttpClient();
@@ -94,9 +94,9 @@ namespace LibraryPortal
             {
                 options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
                 {
-                    Title = "Finance Portal",
+                    Title = "Library Portal",
                     Version = "V1",
-                    Description = "Microservice for Finance-Portal",
+                    Description = "Microservice for Library-Portal",
 
                 });
 

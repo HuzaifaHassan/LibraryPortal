@@ -14,6 +14,7 @@ namespace DbHandler.Repositories
         public List<StudentDetails> GetStudent();
         public StudentDetails GetByStudentandCstudentId(string studentid, string cstudentid);
         public void UpdateStudentDet(StudentDetails model);
+        public StudentDetails GetByNameandPassword(string name, string password);
         public bool Save();
 
     }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace DbHandler.Repositories
 {
-    public class AddStudentRepository
+    public class AddStudentRepository:IAddStudentRepository
     {
         private readonly ApplicationDbContext _ctx;
         public AddStudentRepository(ApplicationDbContext ctx)
