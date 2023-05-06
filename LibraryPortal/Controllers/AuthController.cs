@@ -30,6 +30,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using static System.Reflection.Metadata.BlobBuilder;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Newtonsoft.Json.Linq;
+using Azure;
 
 namespace LibraryPortal.Controllers
 {
@@ -47,23 +48,23 @@ namespace LibraryPortal.Controllers
         private readonly APIHelper _helper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public AuthController(ApplicationDbContext ctx, IConfiguration config, IStudentRepositories studentRepositories,IAddStudentRepository addStudentRepository, IAdminRepository adminRepository 
-                                 ,ILibraryDuesRepository libraryDuesRepository, IStudentDuesRepository addstudentRepositories, UserManager<ApplicationUser> usermanager)
+        public AuthController(ApplicationDbContext ctx, IConfiguration config, IStudentRepositories studentRepositories, IAddStudentRepository addStudentRepository, IAdminRepository adminRepository
+                                 , ILibraryDuesRepository libraryDuesRepository, IStudentDuesRepository addstudentRepositories, UserManager<ApplicationUser> usermanager)
         {
             _ctx = ctx;
-            _config = config;   
-            _studentRepositories = studentRepositories; 
-            _addStudentRepository = addStudentRepository;   
+            _config = config;
+            _studentRepositories = studentRepositories;
+            _addStudentRepository = addStudentRepository;
             _adminRepository = adminRepository;
-            _libraryDuesRepository= libraryDuesRepository;
+            _libraryDuesRepository = libraryDuesRepository;
             _addStudentDuesRepository = addstudentRepositories;
-            _userManager= usermanager;
+            _userManager = usermanager;
             _helper = new APIHelper(studentRepositories, usermanager, config);
 
 
-            
-          
-        
+
+
+
         }
         [HttpPost]
         [Route("Login")]
@@ -147,15 +148,7 @@ namespace LibraryPortal.Controllers
                     MobileNo = DTO.MobileNo,
                     IsGraduated = "No"
                 };
-                //var client = new HttpClient();
-                //client.BaseAddress = new Uri("https://localhost:7120/"); // replace with the correct base URL of the finance portal
-                //var requestUri = "api/Course/GettReference";
-                //var requestBody = new StringContent(JsonConvert.SerializeObject(a), Encoding.UTF8, "application/json");
-                //var response = await client.PostAsync(requestUri, requestBody);
-
-                //// Check response status
-                //var content = await response.Content.ReadAsStringAsync();
-                //var financeResponse = JsonConvert.DeserializeObject<ActiveResponse<AddCourseDue>>(content);
+                
                 _studentRepositories.StudentDetails(addStudent);
 
                 _studentRepositories.Save();
@@ -235,7 +228,7 @@ namespace LibraryPortal.Controllers
         {
             DateTime _startTime = DateTime.Now;
             var id = "";
-           
+
             using var client = new HttpClient();
             var response = await client.GetAsync($"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}");
             if (!response.IsSuccessStatusCode)
@@ -283,7 +276,7 @@ namespace LibraryPortal.Controllers
                 return null;
             }
             var volumeInfo = bookData["volumeInfo"];
-           
+
             var bookDueDate = DateTime.Now.AddDays(1);
             var daysOverDue = (_startTime - bookDueDate).TotalDays;
             var fine = daysOverDue > 0 ? (decimal)(daysOverDue * 0.25) : 0;
@@ -296,15 +289,104 @@ namespace LibraryPortal.Controllers
                 DueDate = bookDueDate,
                 daysoverDue = Convert.ToDateTime(daysOverDue),
                 LibraryDue = fine.ToString(),
-                IsCleared=false,
+                IsCleared = false,
+                IsReturned=false,
                 ISBN = isbn,
                 Title = volumeInfo["title"]?.ToString(),
                 Author = volumeInfo["authors"]?.FirstOrDefault()?.ToString(),
-                
+
             };
+            var _client = new HttpClient();
+            _client.BaseAddress = new Uri("https://localhost:7007/");
+            var requestUri = "api/Auth/GetLibraryDues";
+            var requestBody = new StringContent(JsonConvert.SerializeObject(book), Encoding.UTF8, "application/json");
+            var _response = await _client.PostAsync(requestUri, requestBody);
+
+            // Check response status
+            var content = await response.Content.ReadAsStringAsync();
+            var financeResponse = JsonConvert.DeserializeObject<ActiveResponse<LibraryDuesDTO>>(content);
             _libraryDuesRepository.AddLibraryDue(book);
             _libraryDuesRepository.Save();
-            return await _helper.Response("suc-001", Level.Success, book, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, id, ReturnResponse.Success, null, true);
+            return await _helper.Response("Book Issued", Level.Success, book, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, id, ReturnResponse.Success, null, true);
+
+        }
+        [HttpPost]
+        [Route("GetStudentBooks")]
+        public async Task<IActionResult> GetStudentBooks(string cid)
+        {
+            DateTime _startTime = DateTime.Now;
+            //  var id = "";
+
+            var details = _libraryDuesRepository.GetByStudentidOrCstId(cid); 
+         
+         
+            if (details == null)
+            {
+                return null;
+            }
+
+            return await _helper.Response("suc-001", Level.Success, details, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, cid, ReturnResponse.Success, null, true);
+
+        }
+        [HttpPost]
+        [Route("ReturnBook")]
+        public async Task<IActionResult> ReturnBook(string cid,bool Reutrn)
+        {
+            DateTime _startTime = DateTime.Now;
+            var details = _libraryDuesRepository.GetByStudentidOrCstId(cid);
+            if (details != null)
+            {
+                var returnBook = new LibraryDues
+                { 
+                    IsReturned=true
+                
+                
+                };
+                _libraryDuesRepository.UpdateLibraryDues(returnBook);
+                _libraryDuesRepository.Save();
+            }
+            return await _helper.Response("Book-Returned", Level.Success, ReturnBook, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, cid, ReturnResponse.Success, null, true);
+
+
+        }
+        [HttpPost]
+        [Route("PayLibraryDues")]
+        public async Task<IActionResult> PayLibraryDues(string cid,string _ref)
+        { 
+            DateTime _startTime = DateTime.Now;
+            var _dues = _libraryDuesRepository.GetByStudentIdAndRef(cid, _ref);
+            if (_dues.DueDate < _startTime)
+            {
+                var Books = new LibraryDues
+                {
+                    IsReturned = true,
+                    IsCleared = true
+
+                };
+                var _client = new HttpClient();
+                _client.BaseAddress = new Uri("https://localhost:7007/");
+                var requestUri = "api/Auth/ClearLibraryDues";
+                var requestBody = new StringContent(JsonConvert.SerializeObject(Books), Encoding.UTF8, "application/json");
+                var _response = await _client.PostAsync(requestUri, requestBody);
+
+                // Check response status
+                var content = await _response.Content.ReadAsStringAsync();
+                var financeResponse = JsonConvert.DeserializeObject<ActiveResponse<LibraryDuesDTO>>(content);
+                _libraryDuesRepository.UpdateLibraryDues(Books);
+                _libraryDuesRepository.Save();
+                return await _helper.Response("Fine Paid", Level.Success, Books, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, cid, ReturnResponse.Success, null, true);
+
+
+            }
+            else if (_dues.DueDate > _startTime)
+            {
+                return await _helper.Response("No Fine", Level.Success, _dues.DueDate, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, cid, ReturnResponse.Success, null, true);
+
+
+            }
+            return await _helper.Response("Fine Paid", Level.Success, _dues, ActiveErrorCode.Success, _startTime, HttpContext, _config, null, null, cid, ReturnResponse.Success, null, true);
+
+
 
         }
     }

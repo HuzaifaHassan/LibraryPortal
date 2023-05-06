@@ -13,8 +13,9 @@ namespace DbHandler.Repositories
     {
         public void AddLibraryDue(LibraryDues model);
         public LibraryDues GetByStudentid(string id);
-        public LibraryDues GetByStudentIdAndRef(string id, string _ref);
+        public LibraryDues GetByStudentIdAndRef(string Cid,string _ref);
         public void UpdateLibraryDues(LibraryDues model);
+        public LibraryDues GetByStudentidOrCstId( string cstid);
         public bool Save();
 
     }

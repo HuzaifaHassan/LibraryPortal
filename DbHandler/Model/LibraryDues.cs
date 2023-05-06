@@ -22,5 +22,6 @@ namespace DbHandler.Model
         public string Author { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime daysoverDue { get; set; }
+        public bool IsReturned { get; set; }
     }
 }

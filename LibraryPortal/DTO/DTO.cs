@@ -53,6 +53,7 @@ namespace LibraryPortal.DTO
         public DateTime DueDate { get; set; }
         public DateTime daysoverDue { get; set; }
         public BaseClass baseclass { get; set; }
+        public bool IsReturned { get; set; }
     }
     public class StudentDTO
     {
