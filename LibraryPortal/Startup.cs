@@ -42,7 +42,7 @@ namespace LibraryPortal
         public void ConfigureServices(IServiceCollection services)
         {
             //  var connection = "";
-            var connection = "Data Source=HUZAIFAHASSAN\\SQLEXPRESS;Initial Catalog=LibraryDB;Integrated Security=True;TrustServerCertificate=True";
+            var connection = "Data Source=HUZAIFAHASSAN\\SQLEXPRESS;Initial Catalog=LibraryDB;Integrated Security=True;TrustServerCertificate=True;";
             var conn = new SqlConnection(connection);
             services.AddDbContextPool<ApplicationDbContext>(options =>
             {

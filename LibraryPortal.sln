@@ -5,7 +5,9 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibraryPortal", "LibraryPortal\LibraryPortal.csproj", "{109E3208-1522-40CD-B6B0-935165FB9D1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbHandler", "DbHandler\DbHandler.csproj", "{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbHandler", "DbHandler\DbHandler.csproj", "{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionTest", "FunctionTest\FunctionTest.csproj", "{E241B739-E88C-433D-AB31-2A394997686F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B104E513-6C9A-49BD-B57E-D4C78C2F3B23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E241B739-E88C-433D-AB31-2A394997686F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E241B739-E88C-433D-AB31-2A394997686F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E241B739-E88C-433D-AB31-2A394997686F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E241B739-E88C-433D-AB31-2A394997686F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
